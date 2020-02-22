@@ -17,8 +17,12 @@ public class PessoaService {
         return business.getPessoas();
     }
 
-    public void criarPessoa(){
+    public void criarPessoa() throws Exception {
         business.criarPessoa();
+    }
+
+    public void savePessoa(Pessoa pessoa) throws Exception {
+        business.savePessoa(pessoa);
     }
 
 }
