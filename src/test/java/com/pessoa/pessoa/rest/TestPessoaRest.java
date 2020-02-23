@@ -1,7 +1,6 @@
 package com.pessoa.pessoa.rest;
 
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import static org.hamcrest.Matchers.*;
@@ -16,16 +15,31 @@ public class TestPessoaRest {
     }
 
     @Test
-    void novaPessoa() {
+    void novaPessoaInvalida() {
+
+        String myJson = "{\"nome\":\"alex\",\"cpf\": \"1111\"}";
+
         given()
-                .relaxedHTTPSValidation()
-                .param("nome", "Alex")
-                .param("cpf","1111")
+                .contentType("application/json")
+                .body(myJson)
                 .when()
                 .post("/api/v1/novo")
-                .then().statusCode(200)
-                .contentType(ContentType.JSON)
-                .body("message", is("CPF inválido!"));
+                .then()
+                .statusCode(400)
+                .body("message", containsString("CPF inválido!"));
+    }
 
+    @Test
+    void novaPessoaValida() {
+
+        String myJson = "{\"nome\":\"alex\",\"cpf\": \"13341639012\"}";
+
+        given()
+                .contentType("application/json")
+                .body(myJson)
+                .when()
+                .post("/api/v1/novo")
+                .then()
+                .statusCode(201);
     }
 }
