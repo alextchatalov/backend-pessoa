@@ -17,12 +17,19 @@ public class PessoaService {
         return business.getPessoas();
     }
 
-    public void criarPessoa() throws Exception {
-        business.criarPessoa();
-    }
-
     public void savePessoa(Pessoa pessoa) throws Exception {
         business.savePessoa(pessoa);
     }
 
+    public void excluirPessoa(String cpf) throws Exception {
+        business.excluirPessoa(cpf);
+    }
+
+    public void atualizarPessoa(Pessoa pessoa) throws Exception {
+        business.atualizarPessoa(pessoa);
+    }
+
+    public Pessoa getPessoaByCpf(String cpf) throws Exception {
+        return  business.getPessoaByCpf(cpf);
+    }
 }

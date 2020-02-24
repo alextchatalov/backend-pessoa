@@ -15,9 +15,19 @@ public class PessoaController {
     @Autowired
     private PessoaService service;
 
-    @GetMapping("/pessoas")
+    @GetMapping("/list")
     public List<Pessoa> getPessoas() {
         return service.getPessoas();
+    }
+
+    @GetMapping("/cpf/{cpf}")
+    public Pessoa getPessoasByCpf(@PathVariable String cpf) {
+        try {
+            return service.getPessoaByCpf(cpf);
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @PostMapping("/novo")
@@ -28,6 +38,25 @@ public class PessoaController {
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/deleta/{cpf}")
+    public void excluirPessoa(@PathVariable String cpf) {
+        try {
+            service.excluirPessoa(cpf);
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+    @PutMapping("/update")
+    public void atualizarPessoa(@RequestBody Pessoa pessoa) {
+        try {
+            service.atualizarPessoa(pessoa);
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 }

@@ -40,4 +40,27 @@ public class PessoaBusiness {
             throw new Exception("CPF inválido!");
         }
     }
+
+    public void excluirPessoa(String cpf) throws Exception {
+        Pessoa pessoaDeleta = validarPessoaSeExistePeloCPF(cpf);
+        repository.delete(pessoaDeleta);
+    }
+
+    private Pessoa validarPessoaSeExistePeloCPF(String cpf) throws Exception {
+        Pessoa pessoa = repository.findByCpf(cpf);
+        if (pessoa == null) {
+            throw new Exception("Pessoa não encontrada com o CPF: " + cpf);
+        }
+        return pessoa;
+    }
+
+    public void atualizarPessoa(Pessoa pessoa) throws Exception {
+        Pessoa pessoaBase = validarPessoaSeExistePeloCPF(pessoa.getCpf());
+        Pessoa pessoaUpdate = Pessoa.builder().id(pessoaBase.getId()).cpf(pessoa.getCpf()).nome(pessoa.getNome()).build();
+        repository.save(pessoaUpdate);
+    }
+
+    public Pessoa getPessoaByCpf(String cpf) throws Exception {
+        return validarPessoaSeExistePeloCPF(cpf);
+    }
 }
