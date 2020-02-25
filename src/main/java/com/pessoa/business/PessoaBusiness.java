@@ -18,25 +18,24 @@ public class PessoaBusiness {
         return (List<Pessoa>) repository.findAll();
     }
 
-    public void criarPessoa() throws Exception {
-        Pessoa pessoa = Pessoa.builder().nome("Alex").cpf("1111").build();
-        boolean cpfValid = CpfCnpjUtils.isValid(pessoa.getCpf());
-        if (cpfValid) {
-            repository.save(pessoa);
-        } else {
-            throw new Exception("CPF inválido!");
-        }
-
-    }
-
     public void savePessoa(Pessoa pessoa) throws Exception {
         if (pessoa == null) {
             throw new Exception("Informe uma pessoa para um novo cadastro!");
         }
-        boolean cpfValid = CpfCnpjUtils.isValid(pessoa.getCpf());
-        if (cpfValid) {
-            repository.save(pessoa);
-        } else {
+        validarCPF(pessoa.getCpf());
+        validarSeCpfJaExisteNaBase(pessoa.getCpf());
+        repository.save(pessoa);
+    }
+
+    private void validarSeCpfJaExisteNaBase(String cpf) throws Exception {
+        Pessoa pessoaJaCadastrada = repository.findByCpf(cpf);
+        if (pessoaJaCadastrada != null) {
+            throw new Exception("Pessoa já cadastrada com esse CPF: " + cpf);
+        }
+    }
+
+    private void validarCPF(String cpf) throws Exception {
+        if (!CpfCnpjUtils.isValid(cpf)) {
             throw new Exception("CPF inválido!");
         }
     }
@@ -55,6 +54,7 @@ public class PessoaBusiness {
     }
 
     public void atualizarPessoa(Pessoa pessoa) throws Exception {
+        validarCPF(pessoa.getCpf());
         Pessoa pessoaBase = validarPessoaSeExistePeloCPF(pessoa.getCpf());
         Pessoa pessoaUpdate = Pessoa.builder().id(pessoaBase.getId()).cpf(pessoa.getCpf()).nome(pessoa.getNome()).build();
         repository.save(pessoaUpdate);
